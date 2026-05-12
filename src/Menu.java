@@ -69,6 +69,13 @@ public class Menu {
             new LootItem("Weapon Mod Kit", LootType.WEAPON_BUFF, 3)
     };
 
+    /**
+     * Allows the player to search for loot after winning a combat encounter.
+     * Randomly selects an item from the loot table and applies it to the player's
+     * inventory.
+     * 
+     * @param loadout The player's inventory to be updated with found items
+     */
     public static void searchAfterEncounter(PlayerLoadout loadout) {
         System.out.println("\nYou search the area for useful supplies...");
         LootItem found = SEARCH_TABLE[RNG.nextInt(SEARCH_TABLE.length)];
@@ -107,6 +114,11 @@ public class Menu {
 
     }
 
+    /**
+     * Main entry point for the game. Initializes the menu, handles character
+     * selection,
+     * and runs the game scenarios in sequence.
+     */
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
 
@@ -134,6 +146,9 @@ public class Menu {
         scanner.close();
     }
 
+    /**
+     * Displays the main menu with game options to the player.
+     */
     public static void showMainMenu() {
         System.out.println("=== Welcome to The Ascent, A Text-Based RPG set in the far future! ===");
         System.out.println("1. Start Game");
@@ -141,6 +156,13 @@ public class Menu {
         System.out.print("Enter your choice: ");
     }
 
+    /**
+     * Creates and returns an ArrayList containing the three available character
+     * classes:
+     * Guardsman, Hacker, and Medic with their stats and descriptions.
+     * 
+     * @return ArrayList of Character objects representing available roles
+     */
     public static ArrayList<Character> createRoles() {
         ArrayList<Character> roles = new ArrayList<>();
 
@@ -171,6 +193,14 @@ public class Menu {
 
     }
 
+    /**
+     * Prompts the player to select a character role from the available options.
+     * Validates input and repeats until a valid choice is made.
+     * 
+     * @param scanner Scanner object for user input
+     * @param roles   ArrayList of available Character roles
+     * @return The selected Character object
+     */
     public static Character selectRole(Scanner scanner, ArrayList<Character> roles) {
         int choice = -1;
 
@@ -189,6 +219,13 @@ public class Menu {
         return roles.get(choice - 1);
     }
 
+    /**
+     * Creates a class-specific starting loadout with weapons and items
+     * tailored to each character type (Guardsman, Hacker, or Medic).
+     * 
+     * @param player The Character for which to create the loadout
+     * @return PlayerLoadout object with starting items and bonuses
+     */
     public static PlayerLoadout createLoadoutForClass(Character player) {
         PlayerLoadout loadout = new PlayerLoadout();
 
@@ -211,6 +248,12 @@ public class Menu {
         return loadout;
     }
 
+    /**
+     * Prints the player's starting items and equipment to the console.
+     * 
+     * @param loadout The PlayerLoadout to display
+     * @param player  The Character whose loadout is being displayed
+     */
     public static void displayLoadout(PlayerLoadout loadout, Character player) {
         System.out.println("\n--- Starting Items ---");
         System.out.println("Weapon: " + loadout.weaponName + " (Damage +" + loadout.bonusDamage + ")");
@@ -231,6 +274,15 @@ public class Menu {
         }
     }
 
+    /**
+     * Runs Scenario 1: The Deep Dark — the player encounters an enemy in tunnels,
+     * optionally uses a lockpick to skip to the boss, or proceeds to the factory
+     * section.
+     * 
+     * @param scanner Scanner for user input
+     * @param player  The player's Character
+     * @param loadout The player's inventory and equipment
+     */
     public static void runFirstScenario(Scanner scanner, Character player, PlayerLoadout loadout) {
         System.out.println("\n--- SCENARIO 1: The Deep Dark ---");
         System.out.println("You wake in a maintenance tunnel beneath the Spire.");
@@ -303,6 +355,19 @@ public class Menu {
 
     }
 
+    /**
+     * Runs a single turn-based combat encounter between the player and an enemy.
+     * Handles player actions (attack, defend, heal, grenade) and enemy
+     * counterattacks.
+     * Returns the player's remaining HP after combat ends.
+     * 
+     * @param scanner  Scanner for user input
+     * @param player   The player's Character
+     * @param loadout  The player's inventory with weapons and items
+     * @param enemy    The Enemy to fight
+     * @param playerHp The player's current health at the start of combat
+     * @return The player's remaining HP after combat (0 if defeated)
+     */
     public static int runCombatEncounter(Scanner scanner, Character player, PlayerLoadout loadout, Enemy enemy,
             int playerHp) {
         int maxHp = player.getHealth();
@@ -366,6 +431,17 @@ public class Menu {
 
     }
 
+    /**
+     * Runs Scenario 2: Factory Climb — two consecutive enemy encounters
+     * (a Medium and a Large enemy) that the player must defeat.
+     * 
+     * @param scanner  Scanner for user input
+     * @param player   The player's Character
+     * @param loadout  The player's inventory and equipment
+     * @param playerHp The player's current health at the start of the scenario
+     * @return The player's remaining HP after defeating both enemies (0 if
+     *         defeated)
+     */
     public static int runFactorySectionEncounter(Scanner scanner, Character player, PlayerLoadout loadout,
             int playerHp) {
         System.out.println("\n--- SCENARIO 2: Factory Climb ---");
@@ -390,6 +466,18 @@ public class Menu {
         return playerHp;
     }
 
+    /**
+     * Runs the Final Scenario: The Summit Core — boss fight against The Iron
+     * Warden.
+     * The boss uses a special attack every 4th turn. Combat continues until player
+     * or boss is defeated.
+     * 
+     * @param scanner  Scanner for user input
+     * @param player   The player's Character
+     * @param loadout  The player's inventory and equipment
+     * @param playerHp The player's current health at the start of the boss fight
+     * @return The player's remaining HP after the boss fight (0 if defeated)
+     */
     public static int runFinalBossScenario(Scanner scanner, Character player, PlayerLoadout loadout, int playerHp) {
         System.out.println("\n--- FINAL SCENARIO: The Summit Core ---");
         System.out.println("You reach the crown of the Spire where the core chamber burns with unstable energy.");
@@ -468,6 +556,16 @@ public class Menu {
         return playerHp;
     }
 
+    /**
+     * Applies rewards for completing a scenario: fully heals the player and
+     * increases their weapon bonus damage by 8.
+     * 
+     * @param player       The player's Character
+     * @param loadout      The player's inventory to be updated with new bonuses
+     * @param currentHp    The player's current HP before healing
+     * @param scenarioName The name of the completed scenario (for display)
+     * @return The player's max health after full healing
+     */
     public static int applyScenarioRewards(Character player, PlayerLoadout loadout, int currentHp,
             String scenarioName) {
         int healedHp = player.getHealth();
