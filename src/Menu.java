@@ -310,7 +310,7 @@ public class Menu {
             System.out.println("\nYou survived the tunnel encounter and find a maintenance lift.");
             System.out.println("The lift grinds upward into a ruined factory section of the Spire.");
 
-            if (loadout.lockpickCount > 0) {
+            if (loadout.lockpickCount > 0 && player.getName().equalsIgnoreCase("Hacker")) {
                 System.out.println("\nUse lockpick to bypass the factory section? (1 = Yes, 2 = No)");
                 int skipChoice = scanner.nextInt();
                 if (skipChoice == 1) {
@@ -382,8 +382,11 @@ public class Menu {
             System.out.println("1. Attack");
             System.out.println("2. Defend");
             System.out.println("3. Use Health Pack");
+            if (loadout.lockpickCount > 0 && player.getName().equalsIgnoreCase("Hacker")) {
+                System.out.println("4. Use Lockpick");
+            }
             if (loadout.grenadeCount > 0) {
-                System.out.println("4. Use Grenade");
+                System.out.println("5. Use Grenade");
             }
             System.out.print("Choose action: ");
 
@@ -403,7 +406,12 @@ public class Menu {
                 } else {
                     System.out.println("No health packs left.");
                 }
-            } else if (action == 4 && loadout.grenadeCount > 0) {
+            } else if (action == 4 && loadout.lockpickCount > 0 && player.getName().equalsIgnoreCase("Hacker")) {
+                loadout.lockpickCount--;
+                System.out.println("You pick the lock and slip past the " + enemy.getName() + "!");
+                System.out.println("You escape the encounter.");
+                return playerHp;
+            } else if (action == 5 && loadout.grenadeCount > 0) {
                 loadout.grenadeCount--;
                 enemy.takeDamage(60);
                 System.out.println("Grenades left: " + loadout.grenadeCount);
